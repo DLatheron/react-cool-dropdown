@@ -18,9 +18,12 @@ npm install simple-component-library
 - Item rendering override;
 x Click outside to close;
 x Click on the entire thing to open (initially);
-- Placeholder for multi select with nothing;
+x Placeholder for multi select with nothing;
 - Adding items;
 - Toolbars with buttons to control selection;
 - Toolbars with the ability to render statistics;
 - Limit the number of selected items.
 - Could we make it so that it only registers for the click outside IFF the dropdown is open???
+- Refactor to break into sub components for easier maintenance;
+- Disable searchable;
+-

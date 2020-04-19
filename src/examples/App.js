@@ -137,6 +137,7 @@ const App = () => (
         <Dropdown
             // prefix={<FontAwesomeIcon icon={faCaretRight} />}
             // suffix={<FontAwesomeIcon icon={faCaretLeft} />}
+            clear={null}
             open={true}
             options={
                 fruits.map((fruit, index) => ({
@@ -156,8 +157,9 @@ const App = () => (
                 return regExp.test(item.id) || regExp.test(item.name);
             }}
             maxSelected={1}
+            noneOption={true}
         />
-        {/* <Dropdown
+        <Dropdown
             // prefix={<FontAwesomeIcon icon={faCaretRight} />}
             // suffix={<FontAwesomeIcon icon={faCaretLeft} />}
             options={
@@ -178,7 +180,9 @@ const App = () => (
                 return regExp.test(item.id) || regExp.test(item.name);
             }}
             maxSelected={0}
-        /> */}
+            noneOption={true}
+
+        />
     </div>
 );
 

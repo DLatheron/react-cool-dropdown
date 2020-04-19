@@ -77,7 +77,8 @@ export default function Dropdown(props) {
         footer,
         sortFn,
         filterFn,
-        maxSelected = 1
+        maxSelected = 1,
+        noneOption = false
     } = props;
 
     const dropdownRef = useRef();
@@ -184,33 +185,36 @@ export default function Dropdown(props) {
                                 >
                                     {state.selected[0].name}
                                 </div>
-                                : <div
-                                    className='no-selected-option'
-                                >
-                                    None
-                                </div>)
+                                : <div className='no-selected-option'>None</div>)
                             : <>
                                 {
-                                    state.selected.map(item => (
-                                        <div
-                                            key={item.id}
-                                            className='multi-selected-option'
-                                        >
-                                            {item.name}
-                                            <span
-                                                className='delete-button'
-                                            >
-                                                <FontAwesomeIcon
-                                                    className='icon'
-                                                    icon={faTimes}
-                                                    onClick={event => {
-                                                        clearOption(item);
-                                                        event.stopPropagation();
-                                                    }}
-                                                />
-                                            </span>
+                                    state.selected.length === 0
+                                        ? <div className='no-selected-option'>
+                                            None
                                         </div>
-                                    ))
+                                        : state.selected.map(item => (
+                                                <div
+                                                    key={item.id}
+                                                    className='multi-selected-option'
+                                                >
+                                                    {item.name}
+                                                    <span
+                                                        className='delete-button'
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            className='icon'
+                                                            icon={faTimes}
+                                                            onClick={event => {
+                                                                event.preventDefault();
+                                                                event.stopPropagation();
+                                                                event.nativeEvent.stopImmediatePropagation();
+
+                                                                clearOption(item);
+                                                            }}
+                                                        />
+                                                    </span>
+                                                </div>
+                                            ))
                                 }
                             </>
                     }
@@ -266,6 +270,18 @@ export default function Dropdown(props) {
                 >
                     {header && <div className='header'>{header}</div>}
                     <div className='body'>
+                        {
+                            noneOption && state.searchTerm === '' &&
+                                <div
+                                    className='option none'
+                                    onClick={() => {
+                                        clearAll();
+                                        closeDropdown();
+                                    }}
+                                >
+                                    None
+                                </div>
+                        }
                         {
                             filteredOptions.length === 0
                                 ? <div className='no-options'>

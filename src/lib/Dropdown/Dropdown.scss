@@ -152,7 +152,12 @@
                     &.selected {
                         color: red;
                     }
+
+                    &.none {
+                        font-style: italic;
+                    }
                 }
+
 
                 .no-options {
                     font-style: italic;
