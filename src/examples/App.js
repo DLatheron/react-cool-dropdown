@@ -157,7 +157,7 @@ const App = () => (
             }}
             maxSelected={1}
         />
-        <Dropdown
+        {/* <Dropdown
             // prefix={<FontAwesomeIcon icon={faCaretRight} />}
             // suffix={<FontAwesomeIcon icon={faCaretLeft} />}
             options={
@@ -178,7 +178,7 @@ const App = () => (
                 return regExp.test(item.id) || regExp.test(item.name);
             }}
             maxSelected={0}
-        />
+        /> */}
     </div>
 );
 

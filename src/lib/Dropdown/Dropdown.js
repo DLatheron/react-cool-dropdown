@@ -1,30 +1,90 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useReducer } from 'react';
 import classNames from 'classnames';
+import { useOutsideClick } from '../Hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretUp, faCaretDown, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import './Dropdown.scss';
 
-export default function Dropdown({
-    prefix,
-    clear = <FontAwesomeIcon icon={faTimes} />,
-    suffix,
-    handle = ({ state }) => <FontAwesomeIcon icon={state.open ? faCaretUp : faCaretDown} />,
-    open,
-    options = [],
-    header,
-    footer,
-    sortFn,
-    filterFn,
-    maxSelected = 1
-}) {
-    const searchRef = useRef();
-    const [state, setState] = useState({
+function initialState({ open }) {
+    return {
         open,
         selected: [],
         searchTerm: ''
-    });
+    };
+}
+
+function reducer(state, action) {
+    switch (action.type) {
+        case 'open':
+            return {
+                ...state,
+                open: true
+            };
+
+        case 'close':
+            return {
+                ...state,
+                open: false,
+                searchTerm: ''
+            };
+
+        case 'toggle':
+            return {
+                ...state,
+                open: !state.open
+            };
+
+        case 'clearSearch':
+            return {
+                ...state,
+                searchTerm: ''
+            };
+
+        case 'setSearchTerm':
+            return {
+                ...state,
+                searchTerm: action.searchTerm
+            };
+
+        case 'clearSelected':
+            return {
+                ...state,
+                selected: []
+            };
+
+        case 'setSelected':
+            return {
+                ...state,
+                selected: action.selected
+            };
+
+        default:
+            throw new Error(`Uncognised action type ${action.type}`);
+    }
+}
+
+export default function Dropdown(props) {
+    const {
+        prefix,
+        clear = <FontAwesomeIcon icon={faTimes} />,
+        suffix,
+        handle = ({ state }) => <FontAwesomeIcon icon={state.open ? faCaretUp : faCaretDown} />,
+        open = false,
+        options = [],
+        header,
+        footer,
+        sortFn,
+        filterFn,
+        maxSelected = 1
+    } = props;
+
+    const dropdownRef = useRef();
+    const searchRef = useRef();
+
+    const [state, dispatch] = useReducer(reducer, initialState({ open }));
+
     const sortedOptions = useMemo(() => (
         sortFn
             ? [...options].sort(sortFn)
@@ -37,11 +97,13 @@ export default function Dropdown({
     ), [sortedOptions, state.searchTerm, filterFn]);
 
     const toggleDropdown = () => {
-        setState({
-            ...state,
-            open: !state.open,
-            searchTerm: ''
-        });
+        dispatch({ type: 'toggle' });
+    };
+    const closeDropdown = () => {
+        dispatch({ type: 'close' });
+    };
+    const openDropdown = () => {
+        dispatch({ type: 'open' });
     };
 
     const isSelected = item => state.selected.find(i => item === i);
@@ -68,11 +130,10 @@ export default function Dropdown({
             console.warn('TODO: Support a limited number of selections...');
         }
 
-        setState({
-            ...state,
-            selected: newSelected,
-            open
-        });
+        dispatch({ type: 'setSelected', selected: newSelected });
+        if (open === false) {
+            dispatch({ type: 'close' });
+        }
 
         // Return focus to search.
         searchRef.current && searchRef.current.focus();
@@ -80,27 +141,34 @@ export default function Dropdown({
     };
     const clearOption = item => {
         console.info('clearOption', item);
-        setState({
-            ...state,
-            selected: [...state.selected.filter(i => item !== i)]
-        });
+        dispatch({ type: 'setSelected', selected: [...state.selected.filter(i => item !== i)] });
     };
     const clearAll = () => {
-        setState({
-            ...state,
-            selected: []
-        });
+        console.info('Clear All');
+
+        dispatch({ type: 'clearSelected' });
     }
 
     const search = searchTerm => {
-        setState({
-            ...state,
-            searchTerm
-        })
+        dispatch({ type: 'setSearchTerm', searchTerm });
     };
 
+    useOutsideClick(dropdownRef, () => closeDropdown());
+
     return (
-        <div className='dropdown'>
+        <div
+            ref={dropdownRef}
+            className='dropdown'
+            onClick={event => {
+                if (!state.open) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.nativeEvent.stopImmediatePropagation();
+
+                    openDropdown();
+                }
+            }}
+        >
             <div
                 className='selection-box'
                 onClick={() => searchRef.current && searchRef.current.focus()}
@@ -111,10 +179,14 @@ export default function Dropdown({
                     {
                         (maxSelected === 1)
                             ? !state.open && (state.selected.length > 0
-                                ? <div className='single-selected-option'>
+                                ? <div
+                                    className='single-selected-option'
+                                >
                                     {state.selected[0].name}
                                 </div>
-                                : <div className='no-selected-option'>
+                                : <div
+                                    className='no-selected-option'
+                                >
                                     None
                                 </div>)
                             : <>
@@ -161,7 +233,13 @@ export default function Dropdown({
                     clear && numSelected() > 0 &&
                         <span
                             className='clear'
-                            onClick={clearAll}
+                            onClick={event => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.nativeEvent.stopImmediatePropagation();
+
+                                clearAll();
+                            }}
                         >
                             {clear}
                         </span>

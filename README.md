@@ -16,10 +16,11 @@ npm install simple-component-library
 - Optimise 'isSelected' with lookup of id;
 - Variable fields;
 - Item rendering override;
-- Click outside to close;
-- Click on the entire thing to open (initially);
+x Click outside to close;
+x Click on the entire thing to open (initially);
 - Placeholder for multi select with nothing;
 - Adding items;
 - Toolbars with buttons to control selection;
 - Toolbars with the ability to render statistics;
-- Limit the number of selected item.
+- Limit the number of selected items.
+- Could we make it so that it only registers for the click outside IFF the dropdown is open???
