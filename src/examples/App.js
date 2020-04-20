@@ -134,7 +134,7 @@ const fruits = [
 const App = () => (
     <div className='app'>
         <h1>Dropdown Examples</h1>
-        <Dropdown
+        {/* <Dropdown
             // prefix={<FontAwesomeIcon icon={faCaretRight} />}
             // suffix={<FontAwesomeIcon icon={faCaretLeft} />}
             clear={null}
@@ -158,7 +158,7 @@ const App = () => (
             }}
             maxSelected={1}
             noneOption={true}
-        />
+        /> */}
         <Dropdown
             // prefix={<FontAwesomeIcon icon={faCaretRight} />}
             // suffix={<FontAwesomeIcon icon={faCaretLeft} />}
@@ -180,8 +180,8 @@ const App = () => (
                 return regExp.test(item.id) || regExp.test(item.name);
             }}
             maxSelected={0}
-            noneOption={true}
-
+            // noneOption={true}
+            moveToTop={true}
         />
     </div>
 );

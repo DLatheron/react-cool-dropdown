@@ -1,5 +1,5 @@
 .dropdown {
-    >.selection-box {
+    >.selection-container {
         display: grid;
         grid-template-columns: auto 1fr auto auto auto;
         grid-template-areas: 'prefix selected clear suffix handle';
@@ -18,7 +18,7 @@
             font-weight: bold;
         }
 
-        >.selected {
+        >.selection {
             grid-area: selected;
             margin: auto 0;
             padding: 0 10px;
@@ -102,7 +102,7 @@
         }
     }
 
-    >.anchor {
+    >.list-container {
         position: relative;
 
         >.option-menu {
@@ -157,7 +157,6 @@
                         font-style: italic;
                     }
                 }
-
 
                 .no-options {
                     font-style: italic;

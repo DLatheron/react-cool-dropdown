@@ -21,5 +21,4 @@ x Placeholder for multi select with nothing;
 - Limit the number of selected items.
 - Could we make it so that it only registers for the click outside IFF the dropdown is open???
 - Refactor to break into sub components for easier maintenance;
-- Disable searchable;
--
+- Disable searchable.

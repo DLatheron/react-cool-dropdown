@@ -14,8 +14,6 @@ export default function useOutsideClick(ref, handleOutsideClick) {
     useEffect(() => {
         document.addEventListener('click', handleClick);
 
-        return () => {
-            document.removeEventListener('click', handleClick);
-        };
+        return () => document.removeEventListener('click', handleClick);
     });
 }
