@@ -10,7 +10,6 @@ import Search from './Search';
 export default function SelectionContainer(renderProps) {
     const {
         props,
-        methods,
         state
     } = renderProps;
 

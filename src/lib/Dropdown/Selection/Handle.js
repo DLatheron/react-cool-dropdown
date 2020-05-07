@@ -2,9 +2,13 @@ import React from 'react';
 
 export default function Handle(renderProps) {
     const {
-        props,
+        props: { handle },
         methods
     } = renderProps;
+
+    if (!handle) {
+        return null;
+    }
 
     return (
         <span
@@ -14,7 +18,11 @@ export default function Handle(renderProps) {
                 methods.toggleDropdown();
             }}
         >
-            {props.handle(renderProps)}
+        {
+            (typeof handle === 'function')
+                ? handle(renderProps)
+                : handle
+        }
         </span>
     );
 }

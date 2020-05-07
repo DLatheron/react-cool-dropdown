@@ -14,16 +14,20 @@ export default function Selection(renderProps) {
     switch (props.maxSelected) {
         // Single select.
         case 1:
-            if (!state.open && state.selected.length > 0) {
-                return (
-                    <div
-                        className='single-selected-option'
-                    >
-                        {state.selected[0].name}
-                    </div>
-                );
+            if (!state.open) {
+                if (state.selected.length > 0) {
+                    return (
+                        <div
+                            className='single-selected-option'
+                        >
+                            {state.selected[0].name}
+                        </div>
+                    );
+                } else {
+                    return <NoSelection {...renderProps} />
+                }
             } else {
-                return <NoSelection {...renderProps} />
+                return null;
             }
 
         // Multi select.

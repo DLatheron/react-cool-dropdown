@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useReducer } from 'react';
 import { useOutsideClick } from '../Hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretUp, faCaretDown, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faCaretUp, faCaretDown, faTimes, faBreadSlice } from '@fortawesome/free-solid-svg-icons'
 
 import ListContainer from './List/ListContainer';
 import SelectionContainer from './Selection/SelectionContainer';
@@ -68,9 +68,9 @@ function reducer(state, action) {
 }
 
 Dropdown.defaultProps = {
+    open: false,
     prefix: undefined,
     suffix: undefined,
-    open: false,
     options: [],
     sortFn: undefined,
     filterFn: undefined,
@@ -101,17 +101,16 @@ export default function Dropdown(props) {
             : sortedOptions
     ), [sortedOptions, state.searchTerm, filterFn]);
 
+    // TODO: If maxSelected is not 0 and the state.selected.length is greater than the maxSelected then chop off the end of the selection...
+
     const methods = {
         toggleDropdown: () => {
-            console.info('toggle');
             dispatch({ type: 'toggle' });
         },
         closeDropdown: () => {
-            console.info('close');
             dispatch({ type: 'close' });
         },
         openDropdown: () => {
-            console.info('open');
             dispatch({ type: 'open' });
         },
         suppressEvent: event => {
@@ -124,22 +123,27 @@ export default function Dropdown(props) {
         selectOption: item => {
             let newSelected;
             let open = state.open;
+            let maxSelected = props.maxSelected;
 
-            if (props.maxSelected === 1) {
-                newSelected = [item];
-                open = false;
-            } else if (props.maxSelected === 0) {
-                if (methods.isSelected(item)) {
-                    newSelected = [...state.selected.filter(i => item !== i)];
-                } else {
+            switch (maxSelected) {
+                case 0:
+                    if (methods.isSelected(item)) {
+                        newSelected = [...state.selected.filter(i => item !== i)];
+                    } else {
+                        newSelected = [
+                            ...state.selected,
+                            item
+                        ];
+                    }
+                    break;
 
-                    newSelected = [
-                        ...state.selected,
-                        item
-                    ];
-                }
-            } else {
-                console.warn('TODO: Support a limited number of selections...');
+                case 1:
+                    newSelected = [item];
+                    open = false;
+                    break;
+
+                default:
+                    throw new Error(`TODO: Support a limited number of selections... ${maxSelected}`);
             }
 
             dispatch({ type: 'setSelected', selected: newSelected });
@@ -152,12 +156,9 @@ export default function Dropdown(props) {
             // searchRef.current.scrollIntoView();
         },
         clearOption: item => {
-            console.info('clearOption', item);
             dispatch({ type: 'setSelected', selected: [...state.selected.filter(i => item !== i)] });
         },
         clearAll: () => {
-            console.info('Clear All');
-
             dispatch({ type: 'clearSelected' });
         },
         search: searchTerm => {
@@ -165,7 +166,8 @@ export default function Dropdown(props) {
         }
     };
 
-    useOutsideClick(dropdownRef, () => methods.closeDropdown());
+    // TODO: Need to make methods safe so they don't change...
+    useOutsideClick(dropdownRef, methods.closeDropdown, state.open);
 
     const renderProps = {
         props,

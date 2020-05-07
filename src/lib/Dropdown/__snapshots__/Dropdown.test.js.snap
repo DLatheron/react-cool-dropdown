@@ -2,19 +2,61 @@
 
 exports[`Dropdown renders properly 1`] = `
 <div
-  className="simple-form-group"
+  className="dropdown"
+  onClick={[Function]}
 >
-  <label
-    className="simple-text-label"
+  <div
+    className="selection-container"
+    onClick={[Function]}
   >
-    Email
-  </label>
-  <input
-    className="simple-text-input"
-    onChange={[Function]}
-    placeholder="name@example.com"
-    type="text"
-    value={undefined}
-  />
+    <div
+      className="selection"
+    >
+      <div
+        className="no-selected-option"
+      >
+        None
+      </div>
+    </div>
+    <span
+      className="handle"
+      onClick={[Function]}
+    >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-caret-down fa-w-10 "
+        data-icon="caret-down"
+        data-prefix="fas"
+        focusable="false"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 320 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
+    </span>
+  </div>
+  <div
+    className="list-container"
+  >
+    <div
+      className="option-menu closed"
+    >
+      <div
+        className="body"
+      >
+        <div
+          className="no-options"
+        >
+          No fruits matched the search term
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

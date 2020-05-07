@@ -1,7 +1,19 @@
 import React from 'react';
 
-export default function Suffix({ props }) {
+export default function Suffix(renderProps) {
+    const { suffix } = renderProps.props;
+
+    if (!suffix) {
+        return null;
+    }
+
     return (
-        <span className='suffix'>{props.suffix}</span>
+        <div className='suffix'>
+        {
+            (typeof suffix === 'function')
+                ? suffix(renderProps)
+                : suffix
+        }
+        </div>
     );
 };

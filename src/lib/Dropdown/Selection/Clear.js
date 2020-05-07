@@ -1,7 +1,12 @@
 import React from 'react';
 
-export default function Clear({ props, methods }) {
-    if (methods.numSelected() === 0) {
+export default function Clear(renderProps) {
+    const {
+        props: { clear },
+        methods
+    } = renderProps;
+
+    if (!clear || methods.numSelected() === 0) {
         return null;
     }
 
@@ -13,7 +18,11 @@ export default function Clear({ props, methods }) {
                 methods.clearAll();
             }}
         >
-            {props.clear}
+        {
+            (typeof clear === 'function')
+                ? clear(renderProps)
+                : clear
+        }
         </span>
     );
 }

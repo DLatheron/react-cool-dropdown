@@ -1,19 +1,25 @@
 import { useEffect } from "react";
 
-export default function useOutsideClick(ref, handleOutsideClick) {
-    const handleClick = event => {
-        if (ref.current && !ref.current.contains(event.target)) {
-            console.info('Outside');
-
-            handleOutsideClick();
-        } else {
-            console.info('Inside');
-        }
-    };
-
+export default function useOutsideClick(ref, handleOutsideClick, enabled = true) {
     useEffect(() => {
-        document.addEventListener('click', handleClick);
+        const handleClick = event => {
+            if (ref.current && !ref.current.contains(event.target)) {
+                console.info('useOutsideClick: Outside Click Detected...');
 
+                handleOutsideClick();
+            } else {
+                console.info('useOutsideClick: Inside Click Detected...');
+            }
+        };
+
+        if (!enabled) {
+            console.info('useOutsideClick: Disabled');
+            return;
+        }
+
+        console.info('useOutsideClick: Enabled');
+
+        document.addEventListener('click', handleClick);
         return () => document.removeEventListener('click', handleClick);
-    });
+    }, [ref, handleOutsideClick, enabled]);
 }
