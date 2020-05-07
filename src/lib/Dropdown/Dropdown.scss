@@ -156,6 +156,11 @@
                     &.none {
                         font-style: italic;
                     }
+
+                    &.disabled {
+                        color: lightgray;
+                        cursor: not-allowed;
+                    }
                 }
 
                 .no-options {

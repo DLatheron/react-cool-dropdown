@@ -125,25 +125,23 @@ export default function Dropdown(props) {
             let open = state.open;
             let maxSelected = props.maxSelected;
 
-            switch (maxSelected) {
-                case 0:
-                    if (methods.isSelected(item)) {
-                        newSelected = [...state.selected.filter(i => item !== i)];
-                    } else {
-                        newSelected = [
-                            ...state.selected,
-                            item
-                        ];
-                    }
-                    break;
-
-                case 1:
-                    newSelected = [item];
-                    open = false;
-                    break;
-
-                default:
-                    throw new Error(`TODO: Support a limited number of selections... ${maxSelected}`);
+            if (maxSelected === 1) {
+                newSelected = [item];
+                open = false;
+            } else {
+                if (methods.isSelected(item)) {
+                    // Deselect item (always possible).
+                    newSelected = [...state.selected.filter(i => item !== i)];
+                } else if (maxSelected === 0 || state.selected.length < maxSelected) {
+                    // We have space to add to the selection.
+                    newSelected = [
+                        ...state.selected,
+                        item
+                    ];
+                } else {
+                    // How do we show that you have reached the selection limit???
+                    return;
+                }
             }
 
             dispatch({ type: 'setSelected', selected: newSelected });
@@ -163,6 +161,13 @@ export default function Dropdown(props) {
         },
         search: searchTerm => {
             dispatch({ type: 'setSearchTerm', searchTerm });
+        },
+        canClick: item => {
+            return (
+                methods.isSelected(item) ||
+                props.maxSelected === 0 ||
+                state.selected.length < props.maxSelected
+            );
         }
     };
 

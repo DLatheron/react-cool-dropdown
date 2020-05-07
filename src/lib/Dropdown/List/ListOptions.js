@@ -3,7 +3,12 @@ import React from 'react';
 import ListOption from './ListOption';
 
 export default function ListOptions(renderProps) {
-    const { state } = renderProps;
+    const {
+        state,
+        methods: {
+            canClick
+        }
+    } = renderProps;
 
     if (state.filteredOptions.length === 0) {
         return (
