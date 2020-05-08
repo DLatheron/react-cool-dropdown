@@ -33,6 +33,7 @@
     "@fortawesome/react-fontawesome": "^0.1.9",
     "classnames": "^2.2.6",
     "node-sass": "^4.13.1",
+    "prop-types": "^15.7.2",
     "react-scroll-to-component": "^1.0.2"
   },
   "browserslist": {

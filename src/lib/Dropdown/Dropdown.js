@@ -1,8 +1,10 @@
-import React, { useMemo, useRef, useReducer } from 'react';
+import React, { useEffect, useMemo, useRef, useReducer } from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { useOutsideClick } from '../Hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretUp, faCaretDown, faTimes, faBreadSlice } from '@fortawesome/free-solid-svg-icons'
+import { faCaretUp, faCaretDown, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import ListContainer from './List/ListContainer';
 import SelectionContainer from './Selection/SelectionContainer';
@@ -67,6 +69,31 @@ function reducer(state, action) {
     }
 }
 
+const nodeOrFunc = PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.function
+]);
+
+Dropdown.propTypes = {
+    open: PropTypes.bool,
+    prefix: nodeOrFunc,
+    suffix: nodeOrFunc,
+    options: PropTypes.arrayOf(PropTypes.object),
+    sortFn: PropTypes.func,
+    filterFn: PropTypes.func,
+    maxSelected: PropTypes.number,
+    clear: nodeOrFunc,
+    handle: nodeOrFunc,
+    text: PropTypes.shape({
+        noMatches: PropTypes.string,
+        noneSelected: PropTypes.string,
+        searchPlaceholder: PropTypes.string
+    }),
+    searchable: PropTypes.bool,
+    disabled: PropTypes.bool,
+    tabIndex: PropTypes.number
+};
+
 Dropdown.defaultProps = {
     open: false,
     prefix: undefined,
@@ -77,6 +104,14 @@ Dropdown.defaultProps = {
     maxSelected: 1,
     clear: <FontAwesomeIcon icon={faTimes} />,
     handle: ({ state }) => <FontAwesomeIcon icon={state.open ? faCaretUp : faCaretDown} />,
+    text: {
+        noMatches: 'Nothing matched the search term',
+        noneSelected: 'None',
+        searchPlaceholder: 'Search'
+    },
+    searchable: true,
+    disabled: false,
+    tabIndex: undefined
 };
 
 export default function Dropdown(props) {
@@ -101,7 +136,22 @@ export default function Dropdown(props) {
             : sortedOptions
     ), [sortedOptions, state.searchTerm, filterFn]);
 
-    // TODO: If maxSelected is not 0 and the state.selected.length is greater than the maxSelected then chop off the end of the selection...
+    // Corrects selected items to its is always consistent with the maxSelected.
+    useEffect(() => {
+        if (props.maxSelected > 0 && state.selected.length > props.maxSelected) {
+            dispatch({
+                type: 'setSelected',
+                selected: state.selected.splice(0, props.maxSelected)
+            });
+        }
+    }, [props.maxSelected, state.selected]);
+
+    // Removes search term if the box becomes unsearchable.
+    useEffect(() => {
+        if (!props.searchable) {
+            dispatch({ type: 'clearSearch' });
+        }
+    }, [props.searchable]);
 
     const methods = {
         toggleDropdown: () => {
@@ -140,7 +190,7 @@ export default function Dropdown(props) {
                     ];
                 } else {
                     // How do we show that you have reached the selection limit???
-                    return;
+                    return false;
                 }
             }
 
@@ -152,6 +202,8 @@ export default function Dropdown(props) {
             // Return focus to search.
             searchRef.current && searchRef.current.focus();
             // searchRef.current.scrollIntoView();
+
+            return true;
         },
         clearOption: item => {
             dispatch({ type: 'setSelected', selected: [...state.selected.filter(i => item !== i)] });
@@ -165,7 +217,7 @@ export default function Dropdown(props) {
         canClick: item => {
             return (
                 methods.isSelected(item) ||
-                props.maxSelected === 0 ||
+                props.maxSelected <= 1 ||
                 state.selected.length < props.maxSelected
             );
         }
@@ -187,13 +239,22 @@ export default function Dropdown(props) {
     return (
         <div
             ref={dropdownRef}
-            className='dropdown'
-            onClick={event => {
-                if (!state.open) {
-                    methods.suppressEvent(event);
-                    methods.openDropdown();
-                }
-            }}
+            className={classNames(
+                'dropdown',
+                props.disabled && 'disabled'
+            )}
+            disabled={props.disabled}
+            tabIndex={props.disabled ? -1 : props.tabIndex}
+            onClick={
+                !props.disabled
+                    ? event => {
+                        if (!state.open) {
+                            methods.suppressEvent(event);
+                            methods.openDropdown();
+                        }
+                    }
+                    : undefined
+            }
         >
             <SelectionContainer {...renderProps} />
             <ListContainer {...renderProps} />

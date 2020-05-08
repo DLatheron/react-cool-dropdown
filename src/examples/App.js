@@ -10,6 +10,12 @@ import './App.scss';
 
 const fruits = require('./Fruits.json');
 
+const text = {
+    noMatches: 'No fruits matched the search term',
+    noneSelected: 'None',
+    searchPlaceholder: 'Search...'
+};
+
 const examples = {
     singleSelectMoveToTop: {
         title: '',
@@ -28,7 +34,8 @@ const examples = {
                 return regExp.test(item.id) || regExp.test(item.name);
             },
             maxSelected: 1,
-            moveToTop: true
+            moveToTop: true,
+            text
         }
     },
     multiSelectMoveToTop: {
@@ -49,7 +56,8 @@ const examples = {
             },
             footer: renderProps => `${renderProps.state.selected.length} item(s) selected`,
             maxSelected: 0,
-            moveToTop: true
+            moveToTop: true,
+            text
         }
     }
 };
@@ -142,6 +150,8 @@ function App() {
     const [header, setHeader] = useState(false);
     const [footer, setFooter] = useState(false);
     const [handle, setHandle] = useState(false);
+    const [searchable, setSearchable] = useState(false);
+    const [disabled, setDisabled] = useState(false);
     const [moveToTop, setMoveToTop] = useState(false);
     const [maxSelected, setMaxSelected] = useState(1);
 
@@ -152,6 +162,8 @@ function App() {
         header: header ? 'Fruit' : undefined,
         footer: footer ? ({ state: { selected } }) => `${selected.length} item(s) selected` : undefined,
         handle: handle ? ({ state: { open } }) => <FontAwesomeIcon icon={open ? faCaretRight : faCaretLeft} /> : undefined,
+        searchable,
+        disabled,
         maxSelected,
         moveToTop
     };
@@ -207,6 +219,8 @@ function App() {
                     { id: 'header', value: header, type: 'checkbox', setValue: setHeader, text: 'Header' },
                     { id: 'footer', value: footer, type: 'checkbox', setValue: setFooter, text: 'Footer' },
                     { id: 'handle', value: handle, type: 'checkbox', setValue: setHandle, text: 'Handle' },
+                    { id: 'searchable', value: searchable, type: 'checkbox', setValue: setSearchable, text: 'Searchable' },
+                    { id: 'disabled', value: disabled, type: 'checkbox', setValue: setDisabled, text: 'Disabled' },
                     { id: 'moveToTop', value: moveToTop, type: 'checkbox', setValue: setMoveToTop, text: 'Move selected item to top of list' },
                     { id: 'maxSelected', value: maxSelected, type: 'number', min: 0, setValue: setMaxSelected, text: 'Maximum number of selected items' }
                 ]

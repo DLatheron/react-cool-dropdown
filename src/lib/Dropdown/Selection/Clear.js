@@ -1,28 +1,34 @@
 import React from 'react';
+import classNames from 'classnames';
 
 export default function Clear(renderProps) {
     const {
-        props: { clear },
+        props,
         methods
     } = renderProps;
 
-    if (!clear || methods.numSelected() === 0) {
+    if (!props.clear || methods.numSelected() === 0) {
         return null;
     }
 
     return (
-        <span
-            className='clear'
+        <button
+            className={classNames(
+                'clear',
+                props.disabled && 'disabled'
+            )}
             onClick={event => {
                 methods.suppressEvent(event);
                 methods.clearAll();
             }}
+            disabled={props.disabled}
+
         >
         {
-            (typeof clear === 'function')
-                ? clear(renderProps)
-                : clear
+            (typeof props.clear === 'function')
+                ? props.clear(renderProps)
+                : props.clear
         }
-        </span>
+        </button>
     );
 }

@@ -1,28 +1,33 @@
 import React from 'react';
+import classNames from 'classnames';
 
 export default function Handle(renderProps) {
     const {
-        props: { handle },
+        props,
         methods
     } = renderProps;
 
-    if (!handle) {
+    if (!props.handle) {
         return null;
     }
 
     return (
-        <span
-            className='handle'
+        <button
+            className={classNames(
+                'handle',
+                props.disabled && 'disabled'
+            )}
             onClick={event => {
                 methods.suppressEvent(event);
                 methods.toggleDropdown();
             }}
+            disabled={props.disabled}
         >
         {
-            (typeof handle === 'function')
-                ? handle(renderProps)
-                : handle
+            (typeof props.handle === 'function')
+                ? props.handle(renderProps)
+                : props.handle
         }
-        </span>
+        </button>
     );
 }

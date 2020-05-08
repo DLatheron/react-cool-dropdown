@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 export default function ListOption({ item, props, methods }) {
     const selected = methods.isSelected(item);
-    const canClick = methods.canClick(item);
+    const disabled = props.disabled || !methods.canClick(item);
 
     if (selected && (props.moveToTop || props.removeWhenSelected)) {
         return null;
@@ -15,13 +15,17 @@ export default function ListOption({ item, props, methods }) {
                 classNames(
                     'option',
                     selected && 'selected',
-                    !canClick && 'disabled'
+                    disabled && 'disabled'
                 )
             }
-            onClick={event => {
-                methods.suppressEvent(event);
-                methods.selectOption(item);
-            }}
+            onClick={
+                !props.disabled
+                    ? event => {
+                        methods.suppressEvent(event);
+                        methods.selectOption(item);
+                    }
+                    : undefined
+            }
         >
             {item.name}
         </div>

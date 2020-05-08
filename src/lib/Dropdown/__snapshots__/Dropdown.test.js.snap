@@ -3,6 +3,7 @@
 exports[`Dropdown renders properly 1`] = `
 <div
   className="dropdown"
+  disabled={false}
   onClick={[Function]}
 >
   <div
@@ -18,8 +19,9 @@ exports[`Dropdown renders properly 1`] = `
         None
       </div>
     </div>
-    <span
+    <button
       className="handle"
+      disabled={false}
       onClick={[Function]}
     >
       <svg
@@ -39,7 +41,7 @@ exports[`Dropdown renders properly 1`] = `
           style={Object {}}
         />
       </svg>
-    </span>
+    </button>
   </div>
   <div
     className="list-container"
@@ -53,7 +55,7 @@ exports[`Dropdown renders properly 1`] = `
         <div
           className="no-options"
         >
-          No fruits matched the search term
+          Nothing matched the search term
         </div>
       </div>
     </div>

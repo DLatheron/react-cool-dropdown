@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -14,7 +15,7 @@ export default function Selection(renderProps) {
     switch (props.maxSelected) {
         // Single select.
         case 1:
-            if (!state.open) {
+            if (!state.open || !props.searchable) {
                 if (state.selected.length > 0) {
                     return (
                         <div
@@ -45,18 +46,22 @@ export default function Selection(renderProps) {
                         className='multi-selected-option'
                     >
                         {item.name}
-                        <span
-                            className='delete-button'
+                        <button
+                            className={classNames(
+                                'delete-button',
+                                props.disabled && 'disabled'
+                            )}
+                            onClick={event => {
+                                methods.suppressEvent(event);
+                                methods.clearOption(item);
+                            }}
+                            disabled={props.disabled}
                         >
                             <FontAwesomeIcon
                                 className='icon'
                                 icon={faTimes}
-                                onClick={event => {
-                                    methods.suppressEvent(event);
-                                    methods.clearOption(item);
-                                }}
                             />
-                        </span>
+                        </button>
                     </div>
                 ));
             }

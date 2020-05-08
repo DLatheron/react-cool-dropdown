@@ -1,4 +1,13 @@
+
 .dropdown {
+    &.disabled {
+        cursor: not-allowed;
+
+        >.selection-container {
+            pointer-events: none;
+        }
+    }
+
     >.selection-container {
         display: grid;
         grid-template-columns: auto 1fr auto auto auto;
@@ -8,8 +17,6 @@
         height: 30px;
         border: 1px solid black;
         background-color: white;
-
-        cursor: default;
 
         >.prefix {
             grid-area: prefix;
@@ -55,11 +62,23 @@
                 padding: 2px 0 2px 10px;
                 background-color: #e8e8e8;
 
-                .icon {
-                    font-size: 0.75em;
-                    margin: auto 0;
-                    padding: 0 10px;
-                    cursor: pointer;
+                >.delete-button {
+                    background: none;
+                    border: none;
+                    outline: none;
+
+                    cursor: inherit;
+
+                    &:not(:disabled) {
+                        cursor: pointer;
+                    }
+
+                    .icon {
+                        font-size: 1.2em;
+                        margin: auto 0;
+                        padding: 0;
+                        line-height: 16px;
+                    }
                 }
             }
 
@@ -80,8 +99,16 @@
             margin: auto;
             line-height: 30px;
             padding: 0 10px;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 1em;
 
-            cursor: pointer;
+            cursor: inherit;
+
+            &:not(:disabled) {
+                cursor: pointer;
+            }
         }
 
         >.suffix {
@@ -97,8 +124,16 @@
             margin: auto;
             line-height: 30px;
             padding: 0 10px;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 1em;
 
-            cursor: pointer;
+            cursor: inherit;
+
+            &:not(:disabled) {
+                cursor: pointer;
+            }
         }
     }
 
@@ -138,12 +173,11 @@
                 overflow: auto;
 
                 .option {
-                    cursor: pointer;
-
                     padding: 0 10px;
                     margin: auto 0;
                     line-height: 32px;
                     height: 32px;
+                    cursor: pointer;
 
                     &:hover {
                         background-color: lightgray;

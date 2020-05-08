@@ -1,18 +1,29 @@
 import React from 'react';
 
-export default function Search({ methods, state }) {
-    if (!state.open) {
+export default function Search(renderProps) {
+    const { searchable } = renderProps.props;
+    if (!searchable) {
         return null;
     }
 
+    const { open } = renderProps.state;
+
+    if (!open) {
+        return null;
+    }
+
+    const { searchRef, searchTerm  } = renderProps.state;
+    const { searchPlaceholder } = renderProps.props.text;
+    const { search } = renderProps.methods;
+
     return (
         <input
-            ref={state.searchRef}
+            ref={searchRef}
             className='search'
             type='text'
-            value={state.searchTerm}
-            onChange={event => methods.search(event.target.value)}
-            placeholder='Search'
+            value={searchTerm}
+            onChange={event => search(event.target.value)}
+            placeholder={searchPlaceholder}
             autoFocus
         />
     )
