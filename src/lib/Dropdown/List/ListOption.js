@@ -27,7 +27,7 @@ export default function ListOption({ item, props, methods }) {
                     : undefined
             }
         >
-            {item.name}
+            {methods.itemName(item)}
         </div>
     );
 }

@@ -7,9 +7,9 @@ export default function ListSelected({ props, methods, state }) {
     }
 
     return (
-        state.selected.map(item => (
+        state.selected.map((item, index) => (
             <div
-                key={item.id}
+                key={methods.itemId(item) || index}
                 className={
                     classNames(
                         'option',
@@ -21,7 +21,7 @@ export default function ListSelected({ props, methods, state }) {
                     methods.selectOption(item);
                 }}
             >
-                {item.name}
+                {methods.itemName(item)}
             </div>
         ))
     );

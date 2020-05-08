@@ -4,17 +4,20 @@ import ListOption from './ListOption';
 
 export default function ListOptions(renderProps) {
     const {
-        props: { text },
-        state: { filteredOptions }
+        methods,
+        props,
+        state
     } = renderProps;
 
-    if (filteredOptions.length === 0) {
+    if (state.filteredOptions.length === 0) {
         return (
             <div className='no-options'>
-                {text.noMatches}
+                {props.text.noMatches}
             </div>
         );
     }
 
-    return filteredOptions.map(item => <ListOption key={item.id} item={item} {...renderProps} />);
+    return state.filteredOptions.map((item, index) =>
+        <ListOption key={methods.itemId(item) || index} item={item} {...renderProps}
+    />);
 }

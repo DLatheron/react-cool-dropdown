@@ -21,7 +21,7 @@ export default function Selection(renderProps) {
                         <div
                             className='single-selected-option'
                         >
-                            {state.selected[0].name}
+                            {methods.itemName(state.selected[0])}
                         </div>
                     );
                 } else {
@@ -40,12 +40,12 @@ export default function Selection(renderProps) {
                     return null;
                 }
             } else {
-                return state.selected.map(item => (
+                return state.selected.map((item, index) => (
                     <div
-                        key={item.id}
+                        key={methods.itemId(item) || index}
                         className='multi-selected-option'
                     >
-                        {item.name}
+                        {methods.itemName(item)}
                         <button
                             className={classNames(
                                 'delete-button',

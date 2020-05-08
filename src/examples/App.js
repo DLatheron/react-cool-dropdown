@@ -9,6 +9,12 @@ import { faCaretRight, faCaretLeft, faTimes } from '@fortawesome/free-solid-svg-
 import './App.scss';
 
 const fruits = require('./Fruits.json');
+const objectOptions = fruits.map((fruit, index) => ({
+    id: (index + 1),
+    sortIndex: index,
+    name: fruit
+}));
+const stringOptions = fruits;
 
 const text = {
     noMatches: 'No fruits matched the search term',
@@ -20,11 +26,7 @@ const examples = {
     singleSelectMoveToTop: {
         title: '',
         props:{
-            options: fruits.map((fruit, index) => ({
-                id: (index + 1),
-                sortIndex: index,
-                name: fruit
-            })),
+            options: objectOptions,
             sortFn: (e1, e2) => {
                 return e1.sortIndex - e2.sortIndex;
             },
@@ -41,11 +43,7 @@ const examples = {
     multiSelectMoveToTop: {
         title: '',
         props: {
-            options: fruits.map((fruit, index) => ({
-                id: (index + 1),
-                sortIndex: index,
-                name: fruit
-            })),
+            options: objectOptions,
             sortFn: (e1, e2) => {
                 return e1.sortIndex - e2.sortIndex;
             },
@@ -150,13 +148,13 @@ function App() {
     const [header, setHeader] = useState(false);
     const [footer, setFooter] = useState(false);
     const [handle, setHandle] = useState(false);
-    const [searchable, setSearchable] = useState(false);
+    const [searchable, setSearchable] = useState(true);
     const [disabled, setDisabled] = useState(false);
     const [moveToTop, setMoveToTop] = useState(false);
-    const [maxSelected, setMaxSelected] = useState(1);
+    const [maxSelected, setMaxSelected] = useState(0);
 
     const overrides = {
-        clear: clear ? () => <FontAwesomeIcon icon={faTimes} /> : undefined,
+        clear: clear ? () => <FontAwesomeIcon icon={faTimes} /> : null,
         prefix: prefix ? () => <FontAwesomeIcon icon={faCaretRight} /> : undefined,
         suffix: suffix ? () => <FontAwesomeIcon icon={faCaretLeft} /> : undefined,
         header: header ? 'Fruit' : undefined,
@@ -197,9 +195,24 @@ function App() {
                 noneOption={true}
             /> */}
             <Example>
-                <ExampleTitle>{examples.singleSelectMoveToTop.title}</ExampleTitle>
+                <ExampleTitle>With Option Objects</ExampleTitle>
                 <Dropdown
-                    {...examples.singleSelectMoveToTop.props} {...overrides}
+                    {...examples.singleSelectMoveToTop.props}
+                    {...overrides}
+                    options={objectOptions}
+                    itemKeys={{ id: 'id', name: 'name' }}
+                    selected={[objectOptions[0], objectOptions[1], objectOptions[2], objectOptions[3]]}
+                />
+                <Code>{generatePropsExampleCode({...examples.singleSelectMoveToTop.props, ...overrides})}</Code>
+            </Example>
+
+            <Example>
+                <ExampleTitle>With Option Strings</ExampleTitle>
+                <Dropdown
+                    {...examples.singleSelectMoveToTop.props}
+                    {...overrides}
+                    options={stringOptions}
+                    selected={[stringOptions[0], stringOptions[1], stringOptions[2], stringOptions[3]]}
                 />
                 <Code>{generatePropsExampleCode({...examples.singleSelectMoveToTop.props, ...overrides})}</Code>
             </Example>
@@ -226,13 +239,14 @@ function App() {
                 ]
                     .map(({ id, value, type, setValue, min, max, text }) => {
                         return (
-                            <Checkbox>
+                            <Checkbox key={id}>
                                 <input
                                     id={id}
                                     type={type}
                                     value={value}
                                     min={min}
                                     max={max}
+                                    checked={type === 'checkbox' ? value : undefined}
                                     onChange={e => {
                                         if (type === 'checkbox') {
                                             setValue(!value);

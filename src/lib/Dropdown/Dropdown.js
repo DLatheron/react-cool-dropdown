@@ -14,8 +14,9 @@ import './Dropdown.scss';
 function initialState({ open }) {
     return {
         open,
+        searchTerm: '',
         selected: [],
-        searchTerm: ''
+        selectedSet: new Set()
     };
 }
 
@@ -55,13 +56,15 @@ function reducer(state, action) {
         case 'clearSelected':
             return {
                 ...state,
-                selected: []
+                selected: [],
+                selectedSet: new Set()
             };
 
         case 'setSelected':
             return {
                 ...state,
-                selected: action.selected
+                selected: action.selected,
+                selectedSet: new Set(action.selected)
             };
 
         default:
@@ -69,21 +72,33 @@ function reducer(state, action) {
     }
 }
 
-const nodeOrFunc = PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.function
-]);
-
 Dropdown.propTypes = {
     open: PropTypes.bool,
-    prefix: nodeOrFunc,
-    suffix: nodeOrFunc,
-    options: PropTypes.arrayOf(PropTypes.object),
+    prefix: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.func
+    ]),
+    suffix: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.func
+    ]),
+    options: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.string
+        ])
+    ),
     sortFn: PropTypes.func,
     filterFn: PropTypes.func,
     maxSelected: PropTypes.number,
-    clear: nodeOrFunc,
-    handle: nodeOrFunc,
+    clear: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.func
+    ]),
+    handle: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.func
+    ]),
     text: PropTypes.shape({
         noMatches: PropTypes.string,
         noneSelected: PropTypes.string,
@@ -91,7 +106,14 @@ Dropdown.propTypes = {
     }),
     searchable: PropTypes.bool,
     disabled: PropTypes.bool,
-    tabIndex: PropTypes.number
+    tabIndex: PropTypes.number,
+    itemKeys: PropTypes.shape({
+        name: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.func
+        ]),
+        id: PropTypes.string
+    })
 };
 
 Dropdown.defaultProps = {
@@ -99,6 +121,7 @@ Dropdown.defaultProps = {
     prefix: undefined,
     suffix: undefined,
     options: [],
+    selected: [],
     sortFn: undefined,
     filterFn: undefined,
     maxSelected: 1,
@@ -111,14 +134,21 @@ Dropdown.defaultProps = {
     },
     searchable: true,
     disabled: false,
-    tabIndex: undefined
+    tabIndex: undefined,
+    itemKeys: undefined
 };
 
 export default function Dropdown(props) {
     const dropdownRef = useRef();
     const searchRef = useRef();
 
-    const [state, dispatch] = useReducer(reducer, initialState({ open: props.open }));
+    const [state, dispatch] = useReducer(
+        reducer,
+        initialState({
+            open: props.open,
+            selected: props.selected
+        })
+    );
 
     const sortedOptions = useMemo(() => (
         props.sortFn
@@ -153,6 +183,10 @@ export default function Dropdown(props) {
         }
     }, [props.searchable]);
 
+    useEffect(() => {
+        dispatch({ type: 'setSelected', selected: props.selected });
+    }, [props.selected]);
+
     const methods = {
         toggleDropdown: () => {
             dispatch({ type: 'toggle' });
@@ -168,7 +202,7 @@ export default function Dropdown(props) {
             event.stopPropagation();
             event.nativeEvent.stopImmediatePropagation();
         },
-        isSelected: item => state.selected.find(i => item === i),
+        isSelected: item => state.selectedSet.has(item),
         numSelected: () => state.selected.length,
         selectOption: item => {
             let newSelected;
@@ -219,6 +253,18 @@ export default function Dropdown(props) {
                 methods.isSelected(item) ||
                 props.maxSelected <= 1 ||
                 state.selected.length < props.maxSelected
+            );
+        },
+        itemId: item => {
+            return props.itemKeys && props.itemKeys.id && item[props.itemKeys.id];
+        },
+        itemName: item => {
+            return (
+                !props.itemKeys || !props.itemKeys.name
+                    ? item
+                    : typeof props.itemKeys.name === 'function'
+                        ? props.itemKeys.name(item)
+                        : item[props.itemKeys.name]
             );
         }
     };
