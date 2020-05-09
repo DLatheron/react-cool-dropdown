@@ -13,10 +13,10 @@ npm install react-cool-dropdown
 - Could we make it so that it only registers for the click outside IFF the dropdown is open???
 - AdditionalProps that are available to custom renderers;
 - Support for keyboard control;
-- Up/down arrows to select item;
-- Support for tabbing focus to prev and next controls;
-- Backspace to delete the last selected item (assuming search term is empty);
-- Typing in the search box and pressing `<Enter>` when you get a single response left should select it;
+  - Up/down arrows to select item;
+  - Support for tabbing focus to prev and next controls;
+  - Backspace to delete the last selected item (assuming search term is empty);
+  - Typing in the search box and pressing `<Enter>` when you get a single response left should select it;
 - aria-label.
 - Keep Open option?
 
