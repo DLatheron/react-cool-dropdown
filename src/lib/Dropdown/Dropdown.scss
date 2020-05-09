@@ -2,10 +2,6 @@
 .dropdown {
     &.disabled {
         cursor: not-allowed;
-
-        >.selection-container {
-            pointer-events: none;
-        }
     }
 
     >.selection-container {

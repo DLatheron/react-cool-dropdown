@@ -7,7 +7,6 @@ npm install react-cool-dropdown
 ```
 
 ## TODO List:
-- BUG: Should be able to scroll left and right along a multi-select list of selections;
 - Item rendering override;
 - Toolbars with buttons to control selection - selectAll, clearAll, invertSelection etc.;
 - Adding items (to selection);
@@ -22,6 +21,7 @@ npm install react-cool-dropdown
 - Keep Open option?
 
 ### Done
+- ~~BUG: Should be able to scroll left and right along a multi-select list of selections when disabled;~~
 - ~~Optimise 'isSelected' with lookup of id;~~
 - ~~Variable fields;~~
 - ~~Support for disabling the control (and removing from tabIndex?);~~

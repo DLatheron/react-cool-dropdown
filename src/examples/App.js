@@ -16,6 +16,9 @@ const objectOptions = fruits.map((fruit, index) => ({
 }));
 const stringOptions = fruits;
 
+const defaultObjectsSelected = [objectOptions[0], objectOptions[1], objectOptions[2], objectOptions[3]];
+const defaultStringsSelected = [stringOptions[0], stringOptions[1], stringOptions[2], stringOptions[3]];
+
 const text = {
     noMatches: 'No fruits matched the search term',
     noneSelected: 'None',
@@ -201,7 +204,7 @@ function App() {
                     {...overrides}
                     options={objectOptions}
                     itemKeys={{ id: 'id', name: 'name' }}
-                    selected={[objectOptions[0], objectOptions[1], objectOptions[2], objectOptions[3]]}
+                    selected={defaultObjectsSelected}
                 />
                 <Code>{generatePropsExampleCode({...examples.singleSelectMoveToTop.props, ...overrides})}</Code>
             </Example>
@@ -212,7 +215,7 @@ function App() {
                     {...examples.singleSelectMoveToTop.props}
                     {...overrides}
                     options={stringOptions}
-                    selected={[stringOptions[0], stringOptions[1], stringOptions[2], stringOptions[3]]}
+                    selected={defaultStringsSelected}
                 />
                 <Code>{generatePropsExampleCode({...examples.singleSelectMoveToTop.props, ...overrides})}</Code>
             </Example>
