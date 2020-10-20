@@ -36,7 +36,9 @@ const examples = {
             filterFn: (searchTerm, item) => {
                 const regExp = new RegExp(searchTerm, 'i');
 
-                return regExp.test(item.id) || regExp.test(item.name);
+                return typeof(item) === 'object'
+                    ? regExp.test(item.id) || regExp.test(item.name)
+                    : regExp.test(item);
             },
             maxSelected: 1,
             moveToTop: true,
@@ -53,7 +55,9 @@ const examples = {
             filterFn: (searchTerm, item) => {
                 const regExp = new RegExp(searchTerm, 'i');
 
-                return regExp.test(item.id) || regExp.test(item.name);
+                return typeof(item) === 'object'
+                    ? regExp.test(item.id) || regExp.test(item.name)
+                    : regExp.test(item);
             },
             footer: renderProps => `${renderProps.state.selected.length} item(s) selected`,
             maxSelected: 0,

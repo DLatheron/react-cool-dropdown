@@ -19,6 +19,7 @@ npm install react-cool-dropdown
   - Typing in the search box and pressing `<Enter>` when you get a single response left should select it;
 - aria-label.
 - Keep Open option?
+- When the dropdown is disabled the 'x' buttons on the tokens should (optionally?) disappear... in fact if we do it with CSS then it can just be a theme option...
 
 ### Done
 - ~~BUG: Should be able to scroll left and right along a multi-select list of selections when disabled;~~

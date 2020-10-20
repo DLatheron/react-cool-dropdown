@@ -20,7 +20,7 @@
     "react-dom": "^16.13.1"
   },
   "scripts": {
-    "start": "PORT=3010 react-scripts start",
+    "start": "PORT=3011 react-scripts start",
     "build-examples": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
